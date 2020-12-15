@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Change extension of this file to .gitignore
 
 *.class
@@ -28,3 +29,14 @@ blog/bin/
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+=======
+/target/
+
+/.classpath
+/.springBeans
+/.project
+/.settings/
+/.gradle/
+/build/
+
+>>>>>>> a26df9f6a32b72f2e20dfd4d1e8b3a3f8bc19797
