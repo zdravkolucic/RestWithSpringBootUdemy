@@ -11,8 +11,8 @@ public class CalculatorController {
         throws UnsupportedMathOperationException
     {
         if( isNumeric( numberOne) && isNumeric( numberTwo)) {
-            double numOne = Double.valueOf(numberOne);
-            double numTwo = Double.valueOf(numberTwo);
+            double numOne = Double.parseDouble(numberOne);
+            double numTwo = Double.parseDouble(numberTwo);
             return numOne + numTwo;
         } else {
             throw new UnsupportedMathOperationException( "Parameter is not numeric");
