@@ -1,5 +1,6 @@
 package de.zlucic.exception.handler;
 
+import de.zlucic.exception.DivisionByZeroException;
 import de.zlucic.exception.ExceptionResponse;
 import de.zlucic.exception.UnsupportedMathOperationException;
 import org.apache.coyote.Response;
@@ -18,15 +19,15 @@ import java.util.Date;
 public class CustomizeResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public final ResponseEntity<ExceptionResponse> handleAllException( Exception ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse( new Date(), ex.getMessage(), request.getDescription( false));
+    public final ResponseEntity<ExceptionResponse> handleAllException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
 
         return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(UnsupportedMathOperationException.class)
-    public final ResponseEntity<ExceptionResponse> handleBadRequestException( Exception ex, WebRequest request) {
-        ExceptionResponse exceptionResponse = new ExceptionResponse( new Date(), ex.getMessage(), request.getDescription( false));
+    @ExceptionHandler({UnsupportedMathOperationException.class, DivisionByZeroException.class})
+    public final ResponseEntity<ExceptionResponse> handleBadRequestException(Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
 
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
     }
