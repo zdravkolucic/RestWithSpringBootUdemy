@@ -1,67 +1,48 @@
 package de.zlucic.services;
 
+import de.zlucic.exception.UnknownRessourceException;
 import de.zlucic.model.Person;
+import de.zlucic.repository.PersonRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
+
 
 @Service
 public class PersonServices {
 
-    private final AtomicLong counter = new AtomicLong();
-
-    ArrayList<Person> persons = new ArrayList<>();
+    @Autowired
+    PersonRepository repository;
 
     public PersonServices() {
-        setupMock();
-    }
-
-    private void setupMock() {
-        persons.add( new Person( counter.incrementAndGet(), "Zdravko", "Lucic", "Mozarstr. 37/1, 88255 Sigmaringen", "male"));
-        persons.add( new Person( counter.incrementAndGet(), "Zlatko", "Lucic", "Bittelschießerstr. 38, 72488 Sigmaringen", "male"));
     }
 
     public Person findById(Long id) {
-        for( Person p:persons) {
-            if( p.getId().equals(id)) return p;
-        }
-        return null;
+        return repository.findById( id)
+                .orElseThrow(() -> new UnknownRessourceException( "Person mit der ID: " + id + " unbekannt."));
     }
 
     public List<Person> findAll() {
-        return persons;
+        return repository.findAll();
     }
 
-    public Long addPerson( Person person) {
-        Long id = counter.incrementAndGet();
-        person.setId( id);
-        persons.add( person);
-        return id;
+    public Person addPerson( Person person) {
+        return repository.save( person);
     }
 
-    public String updatePerson( Person person) {
-        for( Person p:persons) {
-            if( p.getId().equals(person.getId())) {
-                p.setFirstName( person.getFirstName());
-                p.setLastName( person.getLastName());
-                p.setAddress( person.getAddress());
-                p.setGender( person.getGender());
-                return "Updated person: " + p.toString();
-            }
-        }
-        return "Person with id " + person.getId() + " not found";
+    public Person updatePerson( Person person) {
+        Person entity = repository.findById( person.getId()).orElseThrow(() -> new UnknownRessourceException("Person mit der ID: " + person.getId() + " unbekannt."));
+
+        entity.setFirstName( person.getFirstName());
+        entity.setLastName( person.getLastName());
+        entity.setAddress( person.getAddress());
+        entity.setGender( person.getGender());
+        return repository.save( entity);
     }
 
-    public String deletePerson( Long id) {
-        for( int index = 0; index<persons.size(); index++) {
-            if( persons.get( index).getId().equals(id)) {
-                String person = persons.get( index).toString();
-                persons.remove( index);
-                return "Removed person: " + person;
-            }
-        }
-        return "Person with id " + id + " not found";
+    public void deletePerson( Long id) {
+        Person entity = repository.findById( id).orElseThrow(() -> new UnknownRessourceException("Person mit der ID: " + id + " unbekannt."));
+        repository.deleteById( id);
     }
 }

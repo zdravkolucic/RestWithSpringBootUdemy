@@ -34,7 +34,7 @@ public class PersonController {
             consumes=MediaType.APPLICATION_JSON_VALUE,
             produces=MediaType.APPLICATION_JSON_VALUE
             )
-    public Long addPerson( @RequestBody Person person)
+    public Person addPerson( @RequestBody Person person)
     {
         return personServices.addPerson( person);
     }
@@ -42,8 +42,8 @@ public class PersonController {
     @RequestMapping(
             value="/deletePerson/{id}",
             method=RequestMethod.DELETE)
-    public String deletePerson( @PathVariable(value="id") Long id) {
-        return personServices.deletePerson( id);
+    public void deletePerson( @PathVariable(value="id") Long id) {
+        personServices.deletePerson( id);
     }
 
     @RequestMapping(
@@ -51,7 +51,7 @@ public class PersonController {
             method=RequestMethod.PUT,
             consumes=MediaType.APPLICATION_JSON_VALUE
     )
-    public String updatePerson( @RequestBody Person p) {
+    public Person updatePerson( @RequestBody Person p) {
         return personServices.updatePerson( p);
     }
 }
