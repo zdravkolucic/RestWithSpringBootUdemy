@@ -12,7 +12,7 @@ public class PersonServices {
 
     private final AtomicLong counter = new AtomicLong();
 
-    ArrayList<Person> persons = new ArrayList<Person>();
+    ArrayList<Person> persons = new ArrayList<>();
 
     public PersonServices() {
         setupMock();
@@ -25,9 +25,7 @@ public class PersonServices {
 
     public Person findById(Long id) {
         for( Person p:persons) {
-            if( p.getId() == id) {
-                return p;
-            }
+            if( p.getId().equals(id)) return p;
         }
         return null;
     }
@@ -45,7 +43,7 @@ public class PersonServices {
 
     public String updatePerson( Person person) {
         for( Person p:persons) {
-            if( p.getId() == person.getId()) {
+            if( p.getId().equals(person.getId())) {
                 p.setFirstName( person.getFirstName());
                 p.setLastName( person.getLastName());
                 p.setAddress( person.getAddress());
@@ -58,10 +56,10 @@ public class PersonServices {
 
     public String deletePerson( Long id) {
         for( int index = 0; index<persons.size(); index++) {
-            if( persons.get( index).getId() == id) {
+            if( persons.get( index).getId().equals(id)) {
                 String person = persons.get( index).toString();
                 persons.remove( index);
-                return "Removed person: " + person.toString();
+                return "Removed person: " + person;
             }
         }
         return "Person with id " + id + " not found";
