@@ -1,4 +1,4 @@
-package de.zlucic.model;
+package de.zlucic.data.model;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -22,7 +22,6 @@ public class Person implements Serializable {
     @Column(nullable = false, length = 100) //wir brauchen keine Namensangabe, da wir Variablennamen direkt auch als Tabellennamen verwendn
     private String address;
 
-    @Column(nullable = false, length = 6)
     private String gender;
 
     public Long getId() {

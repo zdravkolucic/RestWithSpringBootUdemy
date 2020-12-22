@@ -1,7 +1,9 @@
 package de.zlucic.services;
 
+import de.zlucic.converter.DozerConverter;
+import de.zlucic.data.vo.PersonVO;
 import de.zlucic.exception.UnknownRessourceException;
-import de.zlucic.model.Person;
+import de.zlucic.data.model.Person;
 import de.zlucic.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,31 +20,41 @@ public class PersonServices {
     public PersonServices() {
     }
 
-    public Person findById(Long id) {
-        return repository.findById( id)
+    public PersonVO findById(Long id) {
+        Person person = repository.findById( id)
                 .orElseThrow(() -> new UnknownRessourceException( "Person mit der ID: " + id + " unbekannt."));
+
+        return DozerConverter.parseObject( person, PersonVO.class);
     }
 
-    public List<Person> findAll() {
-        return repository.findAll();
+    public List<PersonVO> findAll() {
+        List<Person> persons = repository.findAll();
+        return DozerConverter.parseListObject( persons, PersonVO.class);
     }
 
-    public Person addPerson( Person person) {
-        return repository.save( person);
+    public PersonVO addPerson( PersonVO person) {
+        Person personTemp = DozerConverter.parseObject( person, Person.class);
+        personTemp = repository.save( personTemp);
+        return DozerConverter.parseObject( personTemp, PersonVO.class);
     }
 
-    public Person updatePerson( Person person) {
-        Person entity = repository.findById( person.getId()).orElseThrow(() -> new UnknownRessourceException("Person mit der ID: " + person.getId() + " unbekannt."));
+    public PersonVO updatePerson( PersonVO person) {
+        Person entity = repository.findById( person.getId()).
+                orElseThrow(() -> new UnknownRessourceException("Person mit der ID: " + person.getId() + " unbekannt."));
 
-        entity.setFirstName( person.getFirstName());
-        entity.setLastName( person.getLastName());
-        entity.setAddress( person.getAddress());
-        entity.setGender( person.getGender());
-        return repository.save( entity);
+        Person personTemp = DozerConverter.parseObject( person, Person.class);
+        entity.setFirstName( personTemp.getFirstName());
+        entity.setLastName( personTemp.getLastName());
+        entity.setAddress( personTemp.getAddress());
+        entity.setGender( personTemp.getGender());
+
+        personTemp = repository.save( entity);
+        return DozerConverter.parseObject( personTemp, PersonVO.class);
     }
 
     public void deletePerson( Long id) {
-        Person entity = repository.findById( id).orElseThrow(() -> new UnknownRessourceException("Person mit der ID: " + id + " unbekannt."));
+        Person entity = repository.findById( id).
+                orElseThrow(() -> new UnknownRessourceException("Person mit der ID: " + id + " unbekannt."));
         repository.deleteById( id);
     }
 }
