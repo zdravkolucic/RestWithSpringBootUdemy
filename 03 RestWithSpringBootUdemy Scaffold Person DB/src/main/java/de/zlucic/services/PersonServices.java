@@ -1,7 +1,9 @@
 package de.zlucic.services;
 
 import de.zlucic.converter.DozerConverter;
+import de.zlucic.converter.custom.PersonConverter;
 import de.zlucic.data.vo.PersonVO;
+import de.zlucic.data.vo.v2.PersonVOV2;
 import de.zlucic.exception.UnknownRessourceException;
 import de.zlucic.data.model.Person;
 import de.zlucic.repository.PersonRepository;
@@ -15,7 +17,10 @@ import java.util.List;
 public class PersonServices {
 
     @Autowired
-    PersonRepository repository;
+    private PersonRepository repository;
+
+    @Autowired
+    private PersonConverter personConverter;
 
     public PersonServices() {
     }
@@ -36,6 +41,12 @@ public class PersonServices {
         Person personTemp = DozerConverter.parseObject( person, Person.class);
         personTemp = repository.save( personTemp);
         return DozerConverter.parseObject( personTemp, PersonVO.class);
+    }
+
+    public PersonVOV2 addPersonV2( PersonVOV2 person) {
+        Person person1 = personConverter.convertVOToEntity( person);
+        repository.save( person1);
+        return personConverter.convertEntityToVO( person1);
     }
 
     public PersonVO updatePerson( PersonVO person) {

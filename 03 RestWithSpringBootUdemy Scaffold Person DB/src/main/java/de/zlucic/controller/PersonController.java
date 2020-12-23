@@ -2,6 +2,7 @@ package de.zlucic.controller;
 
 import de.zlucic.data.model.Person;
 import de.zlucic.data.vo.PersonVO;
+import de.zlucic.data.vo.v2.PersonVOV2;
 import de.zlucic.services.PersonServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping( "/person")
+// Versionierung kann gesamthaft für einen Controller erfolgen (bspw. name="/person/v1") oder für jeden handler im Controller einzeln
 public class PersonController {
 
     @Autowired
@@ -21,6 +23,7 @@ public class PersonController {
 
     // @RequestMapping(value = "/findById/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     @GetMapping("/{id}")
+    // man könnte auch auf dieser Ebene versionieren, bspw. "/v1/{id}
     public PersonVO findById(@PathVariable(value = "id") Long id) {
         return personServices.findById( id);
     }
@@ -41,6 +44,11 @@ public class PersonController {
     public PersonVO addPerson( @RequestBody PersonVO person)
     {
         return personServices.addPerson( person);
+    }
+
+    @PostMapping("/v2")
+    public PersonVOV2 addPersonV2( @RequestBody PersonVOV2 person) {
+        return personServices.addPersonV2( person);
     }
 
     /*@RequestMapping(
